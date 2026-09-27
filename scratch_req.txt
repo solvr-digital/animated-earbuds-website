@@ -1,0 +1,476 @@
+<USER_REQUEST>
+Create a premium, cinematic, scroll-driven product website for a fictional wireless earbuds brand called “AEROVA”.
+
+IMPORTANT:
+This must NOT be a normal ecommerce website.
+The entire experience should be built around cinematic motion, product animation and scroll-based storytelling.
+
+The visual experience should feel like a high-end Apple-style product launch website, but with an original AEROVA identity and original layouts.
+
+==================================================
+BRAND
+==================================================
+
+Brand name:
+AEROVA
+
+Product:
+AEROVA ONE
+
+Tagline:
+“A New Dimension of Sound.”
+
+Visual identity:
+- Premium
+- Minimal
+- Futuristic
+- Cinematic
+- Sophisticated
+- Technology-focused
+- Black and white
+- Soft silver product
+- Subtle blue-white lighting
+- High contrast
+- Lots of negative space
+
+==================================================
+NAVBAR
+==================================================
+
+Create a fixed transparent navbar.
+
+Left:
+AEROVA
+
+Center:
+Home
+Features
+Technology
+Battery
+
+Right:
+Search icon
+Shopping bag icon
+
+Navbar should remain minimal and become slightly blurred/glass-like while scrolling.
+
+==================================================
+HERO SECTION
+==================================================
+
+Create a full-screen cinematic hero section.
+
+Background:
+Pure black / very dark charcoal.
+
+Place a large realistic white wireless earbuds charging case in the center.
+
+The product should have:
+- realistic reflections
+- soft studio lighting
+- subtle shadow
+- glossy material
+- small LED indicator
+- premium 3D appearance
+
+Main heading:
+
+“A NEW
+DIMENSION
+OF SOUND.”
+
+Subheading:
+
+“Meet AEROVA ONE — engineered for immersive sound,
+intelligent noise control and all-day comfort.”
+
+CTA:
+“Explore AEROVA ONE →”
+
+Add a small scroll indicator at the bottom.
+
+==================================================
+MAIN PRODUCT ANIMATION
+==================================================
+
+THIS IS THE MOST IMPORTANT PART.
+
+Create a long scroll-controlled animation timeline.
+
+The product should remain visually connected to the user's scroll.
+
+Use GSAP + ScrollTrigger.
+
+Animation sequence:
+
+SCROLL 0–15%
+- Charging case appears centered.
+- Slowly zoom toward the camera.
+- Slight rotation.
+- Light reflection moves across the surface.
+
+SCROLL 15–30%
+- Charging case rotates.
+- Camera moves around the product.
+- Product becomes larger.
+
+SCROLL 30–45%
+- Case lid smoothly opens.
+- Internal earbuds become visible.
+- Add subtle light inside the case.
+
+SCROLL 45–60%
+- Both earbuds rise out of the charging case.
+- Earbuds separate from each other.
+- They float in the air.
+
+SCROLL 60–75%
+- Earbuds rotate slowly.
+- Add subtle sound-wave animations around them.
+
+SCROLL 75–100%
+- Camera transitions from the earbuds to a close-up product view.
+- Product moves toward the next feature section.
+
+The animation must be smooth and scrubbed by scrolling.
+
+DO NOT use random looping animations.
+
+Every major movement must respond to scroll progress.
+
+==================================================
+FEATURE SECTION 01 — IMMERSIVE AUDIO
+==================================================
+
+Create a black full-screen section.
+
+Left side:
+
+01 / 04
+
+“Immersive
+Audio”
+
+Description:
+
+“Experience rich detail, powerful bass and crystal-clear highs engineered for a truly immersive listening experience.”
+
+Right side:
+Show both earbuds floating.
+
+Create animated circular sound waves around the earbuds.
+
+As the user scrolls:
+- sound waves expand
+- earbuds rotate
+- text fades in
+- product moves slightly
+
+==================================================
+FEATURE SECTION 02 — NOISE CONTROL
+==================================================
+
+Create another cinematic section.
+
+Heading:
+
+“Silence,
+When You Want It.”
+
+Description:
+
+“Advanced noise control helps reduce distractions so your music stays at the center of your world.”
+
+Show one earbud in a large close-up.
+
+Create animated sound waves moving toward the earbud.
+
+Then make the waves disappear to visually represent noise cancellation.
+
+Use:
+- waveform animation
+- subtle blur
+- particle movement
+- slow camera movement
+
+==================================================
+FEATURE SECTION 03 — BATTERY
+==================================================
+
+Create a premium product section featuring the charging case.
+
+Heading:
+
+“POWER THAT
+KEEPS UP.”
+
+Display:
+
+“36 HOURS”
+
+with smaller text:
+
+“of listening with the charging case.”
+
+Show a circular battery indicator.
+
+Animate the battery percentage according to scroll position.
+
+Example:
+
+20%
+40%
+60%
+80%
+100%
+
+The charging case should slowly rotate while the percentage changes.
+
+==================================================
+FEATURE SECTION 04 — INSTANT CONNECTION
+==================================================
+
+Create a dark futuristic section.
+
+Show:
+AEROVA earbuds + smartphone.
+
+Animate the earbuds moving toward the phone.
+
+Create a Bluetooth connection animation.
+
+Heading:
+
+“Instantly
+Connected.”
+
+Subtext:
+
+“Open. Connect. Listen.”
+
+Show a glowing connection line between the earbuds and smartphone.
+
+==================================================
+360° PRODUCT SECTION
+==================================================
+
+Create a dedicated interactive 3D product viewer.
+
+Heading:
+
+“EXPLORE
+EVERY ANGLE.”
+
+Place the earbud in the center.
+
+Allow the user to:
+- drag
+- rotate
+- inspect the product from different angles
+
+Add a subtle circular platform underneath.
+
+Include small product angle controls.
+
+Use Three.js / React Three Fiber.
+
+==================================================
+PRODUCT DETAILS
+==================================================
+
+Create a clean white section.
+
+Heading:
+
+“AEROVA ONE”
+
+Subtitle:
+
+“Premium sound. Intelligent design.”
+
+Show the earbuds and charging case.
+
+Display specifications:
+
+Adaptive Noise Control
+Spatial Audio
+36-hour Battery
+Wireless Charging
+IPX4 Resistance
+Bluetooth 5.4
+
+Use minimal icons and elegant typography.
+
+==================================================
+FINAL CINEMATIC SECTION
+==================================================
+
+Return to a dark cinematic background.
+
+Place the charging case and earbuds dramatically in the center.
+
+Add subtle floating particles and reflections.
+
+Heading:
+
+“HEAR THE
+DIFFERENCE.”
+
+Buttons:
+
+BUY AEROVA ONE
+EXPLORE DETAILS
+
+Price:
+
+₹12,999
+
+Make this section visually powerful and minimal.
+
+==================================================
+ANIMATION SYSTEM
+==================================================
+
+Use:
+
+React
+Three.js
+React Three Fiber
+GSAP
+GSAP ScrollTrigger
+Framer Motion
+Tailwind CSS
+
+Use GSAP ScrollTrigger for:
+
+- pinning sections
+- product movement
+- rotation
+- scaling
+- camera movement
+- text transitions
+- section transitions
+- product opening sequence
+
+Use Framer Motion for smaller UI interactions.
+
+==================================================
+3D PRODUCT
+==================================================
+
+Use a realistic GLB/GLTF wireless earbuds model.
+
+Expected model path:
+
+/public/models/aerova-one.glb
+
+Structure the code so the model can easily be replaced later.
+
+If the GLB model is not available yet, create a temporary visual placeholder and keep the complete animation architecture ready for the real model.
+
+==================================================
+VISUAL EFFECTS
+==================================================
+
+Add:
+
+- realistic product shadows
+- subtle reflections
+- soft glow
+- floating particles
+- sound waves
+- smooth camera movement
+- depth of field
+- subtle blur
+- cinematic lighting
+- scroll-based transitions
+- premium typography animations
+
+Avoid excessive effects.
+
+Everything should feel expensive and intentional.
+
+==================================================
+RESPONSIVE DESIGN
+==================================================
+
+Desktop:
+Full cinematic 3D experience.
+
+Tablet:
+Reduce 3D complexity but preserve the animation story.
+
+Mobile:
+Create an optimized version with:
+- vertical product animation
+- simplified 3D
+- readable typography
+- touch-friendly controls
+- smooth scrolling
+
+==================================================
+PERFORMANCE
+==================================================
+
+Optimize the website for performance.
+
+Use:
+- lazy loading
+- compressed 3D assets
+- optimized textures
+- efficient lighting
+- requestAnimationFrame where needed
+- responsive canvas
+- reduced animation complexity on mobile
+
+Avoid unnecessary libraries.
+
+==================================================
+FINAL REQUIREMENT
+==================================================
+
+The website should feel like an interactive product film rather than a traditional website.
+
+The user's scroll should control the story:
+
+PRODUCT
+↓
+ZOOM
+↓
+ROTATE
+↓
+CASE OPENS
+↓
+EARBUDS RISE
+↓
+SOUND WAVES
+↓
+NOISE CONTROL
+↓
+BATTERY
+↓
+CONNECTION
+↓
+360° PRODUCT
+↓
+SPECIFICATIONS
+↓
+FINAL BUY CTA
+
+Make the transitions extremely smooth and cinematic.
+
+Do not create generic cards everywhere.
+
+Do not create a basic ecommerce layout.
+
+Prioritize:
+1. Motion
+2. 3D product storytelling
+3. Scroll interaction
+4. Visual quality
+5. Typography
+6. Performance  “First build only the hero + scroll-controlled 3D product animation. Do not build the remaining sections until the animation works correctly.”
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-09-25T13:46:47+05:30.
+</ADDITIONAL_METADATA>

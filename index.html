@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AEROVA — Cinematic Interactive Product Experience</title>
+  <meta name="description" content="A new dimension of sound. Cinematic scroll-driven interactive 3D product launch.">
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'><circle cx='20' cy='20' r='18' stroke='%2338bdf8' stroke-width='2' fill='%23050507'/><circle cx='20' cy='20' r='5' fill='%23ffffff'/></svg>">
+
+  <!-- Google Fonts: Space Grotesk, Plus Jakarta Sans, Outfit -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            display: ['Outfit', 'sans-serif'],
+            sans: ['Plus Jakarta Sans', '-apple-system', 'sans-serif'],
+            mono: ['Space Grotesk', 'monospace']
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Three.js (r128) + GLTFLoader -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
+
+  <!-- GSAP & ScrollTrigger -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+
+  <!-- Custom Stylesheet -->
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body id="page-body" class="bg-[#070709] text-white antialiased overflow-x-hidden selection:bg-sky-400 selection:text-black">
+
+  <!-- Minimal Transparent / Glass Navbar -->
+  <header id="main-nav" class="fixed top-0 left-0 right-0 z-50 py-5 px-6 md:px-14 flex items-center justify-between transition-colors duration-500 pointer-events-auto">
+    <a href="#" class="flex items-center gap-2 group">
+      <span class="font-display text-xl md:text-2xl font-bold tracking-[0.25em] text-inherit transition-colors">
+        AEROVA
+      </span>
+      <span class="w-1.5 h-1.5 rounded-full bg-sky-400 shadow-[0_0_10px_#38bdf8] animate-pulse"></span>
+    </a>
+
+    <nav class="hidden md:flex items-center gap-8">
+      <a href="#pin-wrapper" class="text-xs font-mono tracking-[0.2em] uppercase opacity-70 hover:opacity-100 transition-opacity">Overview</a>
+      <a href="#section-audio" class="text-xs font-mono tracking-[0.2em] uppercase opacity-70 hover:opacity-100 transition-opacity">Audio</a>
+      <a href="#section-noise-control" class="text-xs font-mono tracking-[0.2em] uppercase opacity-70 hover:opacity-100 transition-opacity">Noise Control</a>
+      <a href="#section-battery" class="text-xs font-mono tracking-[0.2em] uppercase opacity-70 hover:opacity-100 transition-opacity">Battery</a>
+      <a href="#section-360" class="text-xs font-mono tracking-[0.2em] uppercase opacity-70 hover:opacity-100 transition-opacity">360&deg; View</a>
+      <a href="#section-specs" class="text-xs font-mono tracking-[0.2em] uppercase opacity-70 hover:opacity-100 transition-opacity">Specs</a>
+    </nav>
+
+    <div class="flex items-center gap-5">
+      <button class="opacity-70 hover:opacity-100 transition-opacity p-1" title="Search">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="1.8">
+          <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"/>
+        </svg>
+      </button>
+      <button id="nav-bag-btn" class="opacity-70 hover:opacity-100 transition-opacity p-1 relative" title="Bag">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="1.8">
+          <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 10.5V6a3.75 3.75 0 10-7.5 0v4.5m11.356-1.993l1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 01-1.12-1.243l1.264-12A1.125 1.125 0 015.513 7.5h12.974c.576 0 1.059.435 1.119 1.007zM8.625 10.5a.375.375 0 11-.75 0 .375.375 0 01.75 0zm7.5 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z"/>
+        </svg>
+        <span class="absolute -top-1 -right-1 w-2 h-2 rounded-full bg-sky-400"></span>
+      </button>
+      <span class="text-[10px] font-mono tracking-widest px-3 py-1 rounded-full border border-current opacity-60 uppercase">
+        ONE
+      </span>
+    </div>
+  </header>
+
+  <!-- ================= PINNED CINEMATIC PRODUCT PRESENTATION ================= -->
+  <!-- Outer scroll track: 500vh gives ample, slow, smooth cinematic scroll distance -->
+  <div id="pin-wrapper" class="relative w-full" style="height: 500vh;">
+    
+    <!-- Pinned Viewport Container (Occupies 100vw x 100vh pinned by ScrollTrigger) -->
+    <div id="pinned-stage" class="sticky top-0 w-full h-screen overflow-hidden flex items-center justify-center">
+      
+      <!-- Dynamic Background Canvas / Plane for Smooth Dark -> Light -> Dark Transitions -->
+      <div id="dynamic-bg" class="absolute inset-0 z-0 transition-colors duration-200"></div>
+
+      <!-- 3D Three.js WebGL Canvas Mount -->
+      <div id="webgl-canvas-container" class="absolute inset-0 w-full h-full z-10 pointer-events-none"></div>
+
+      <!-- Subtle Progress Indicator at Top -->
+      <div class="absolute top-0 inset-x-0 h-[2px] z-40 bg-black/10">
+        <div id="scroll-progress-fill" class="h-full bg-sky-400 transition-all duration-75 shadow-[0_0_8px_#38bdf8]" style="width: 0%;"></div>
+      </div>
+
+      <!-- ================= SYNCHRONIZED FLOATING TEXT SEQUENCE ================= -->
+      <!-- Message 1: 0% - 20% -->
+      <div id="msg-1" class="cinematic-msg absolute inset-0 z-20 flex flex-col items-center justify-between pt-28 pb-12 px-6 text-center pointer-events-none">
+        <div class="max-w-4xl mx-auto flex flex-col items-center pointer-events-auto">
+          <span class="text-[10px] font-mono tracking-[0.35em] uppercase text-sky-400 mb-4 block">
+            THE ALL-NEW AEROVA ARCHITECTURE
+          </span>
+          <h1 class="font-display font-extrabold text-5xl sm:text-7xl md:text-8xl tracking-tight leading-[1.0] mb-4 text-inherit">
+            MEET THE<br>
+            <span class="title-gradient">FUTURE.</span>
+          </h1>
+          <p class="max-w-md text-xs sm:text-sm font-light tracking-wide opacity-70">
+            A radical departure in acoustic engineering. Designed to turn silence into pure spatial presence.
+          </p>
+        </div>
+
+        <div class="flex flex-col items-center gap-2 opacity-50 pointer-events-auto">
+          <span class="text-[9px] font-mono tracking-[0.3em] uppercase">SCROLL TO NAVIGATE FILM</span>
+          <div class="w-4 h-7 border border-current rounded-full flex justify-center pt-1">
+            <div class="w-1 h-1.5 bg-sky-400 rounded-full animate-bounce"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Message 2: 20% - 42% -->
+      <div id="msg-2" class="cinematic-msg absolute left-8 md:left-24 top-1/2 -translate-y-1/2 max-w-lg z-20 pointer-events-none text-left">
+        <span class="text-[10px] font-mono tracking-[0.35em] uppercase text-sky-400 mb-3 block">
+          01 / ACOUSTIC GEOMETRY
+        </span>
+        <h2 class="font-display font-extrabold text-4xl sm:text-6xl md:text-7xl tracking-tight leading-[1.04] mb-4 text-inherit">
+          DESIGNED FOR<br>
+          <span class="title-gradient">IMMERSION.</span>
+        </h2>
+        <p class="text-xs sm:text-base font-light leading-relaxed max-w-md opacity-75">
+          Every contour and millimeter calibrated to harmonize with natural human head anatomy and spatial binaural perception.
+        </p>
+      </div>
+
+      <!-- Message 3: 42% - 65% -->
+      <div id="msg-3" class="cinematic-msg absolute right-8 md:right-24 top-1/2 -translate-y-1/2 max-w-lg z-20 pointer-events-none text-right">
+        <span class="text-[10px] font-mono tracking-[0.35em] uppercase text-sky-400 mb-3 block">
+          02 / SUB-MICRON TOLERANCE
+        </span>
+        <h2 class="font-display font-extrabold text-4xl sm:text-6xl md:text-7xl tracking-tight leading-[1.04] mb-4 text-inherit">
+          ENGINEERED FOR<br>
+          <span class="title-gradient">DETAIL.</span>
+        </h2>
+        <p class="text-xs sm:text-base font-light leading-relaxed max-w-md ml-auto opacity-75">
+          Dual beryllium composite drivers, micro-milled acoustic chambers, and zero-distortion active pressure equalization.
+        </p>
+      </div>
+
+      <!-- Message 4: 65% - 85% -->
+      <div id="msg-4" class="cinematic-msg absolute left-8 md:left-24 top-1/2 -translate-y-1/2 max-w-lg z-20 pointer-events-none text-left">
+        <span class="text-[10px] font-mono tracking-[0.35em] uppercase text-sky-400 mb-3 block">
+          03 / UNBROKEN HARMONICS
+        </span>
+        <h2 class="font-display font-extrabold text-4xl sm:text-6xl md:text-7xl tracking-tight leading-[1.04] mb-4 text-inherit">
+          EXPERIENCE<br>
+          <span class="title-gradient">EVERY MOMENT.</span>
+        </h2>
+        <p class="text-xs sm:text-base font-light leading-relaxed max-w-md opacity-75">
+          Adaptive real-time noise cancellation sampling ambient acoustics 48,000 times per second.
+        </p>
+      </div>
+
+      <!-- Message 5: 85% - 100% (Final Hero Reveal) -->
+      <div id="msg-5" class="cinematic-msg absolute inset-0 z-20 flex flex-col items-center justify-end pb-16 md:pb-20 px-6 text-center pointer-events-none">
+        <div class="max-w-3xl mx-auto flex flex-col items-center pointer-events-auto">
+          <span class="text-[10px] font-mono tracking-[0.35em] uppercase text-sky-400 mb-3 block">
+            AEROVA ONE &bull; FLAGSHIP EDITION
+          </span>
+          <h2 class="font-display font-black text-4xl sm:text-6xl md:text-7xl tracking-tight leading-[1.04] mb-6 text-inherit">
+            EXPERIENCE THE<br>
+            <span class="title-gradient">DIFFERENCE.</span>
+          </h2>
+          
+          <div class="flex flex-col sm:flex-row items-center gap-4 w-full sm:w-auto">
+            <button id="buy-now-btn" class="px-8 py-3.5 rounded-full bg-white text-black font-semibold text-xs tracking-[0.2em] uppercase hover:bg-sky-300 hover:shadow-[0_0_30px_rgba(56,189,248,0.5)] transition-all transform hover:-translate-y-0.5 w-full sm:w-auto cta-primary">
+              Buy Now &bull; &#8377;12,999
+            </button>
+            <button id="explore-product-btn" class="px-8 py-3.5 rounded-full border border-current text-xs tracking-[0.2em] uppercase hover:bg-white/10 transition-all transform hover:-translate-y-0.5 w-full sm:w-auto cta-secondary">
+              Explore Product
+            </button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ================= FEATURE SECTION 01 — IMMERSIVE AUDIO ================= -->
+  <section id="section-audio" class="relative w-full py-32 px-6 md:px-16 bg-[#050507] border-t border-white/5 overflow-hidden">
+    <div class="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-16 items-center">
+      <div class="lg:col-span-6 space-y-6">
+        <span class="text-xs font-mono tracking-[0.3em] uppercase text-sky-400 block">01 / 04 &bull; IMMERSIVE AUDIO</span>
+        <h2 class="font-display font-extrabold text-4xl sm:text-6xl md:text-7xl tracking-tight leading-[1.05]">
+          Pure Sound.<br>
+          <span class="title-gradient">Zero Distortion.</span>
+        </h2>
+        <p class="text-slate-400 font-light text-base md:text-lg leading-relaxed max-w-xl">
+          Experience rich detail, powerful bass and crystal-clear highs engineered for a truly immersive listening experience. Our custom-designed 11mm Beryllium acoustic drivers deliver low frequencies down to 10Hz with studio-master precision.
+        </p>
+        <div class="grid grid-cols-2 sm:grid-cols-3 gap-6 pt-4 border-t border-white/10">
+          <div>
+            <span class="font-display font-bold text-2xl md:text-3xl text-white block">11mm</span>
+            <span class="text-xs font-mono text-slate-500 uppercase tracking-wider">Beryllium Driver</span>
+          </div>
+          <div>
+            <span class="font-display font-bold text-2xl md:text-3xl text-sky-400 block">&lt;0.05%</span>
+            <span class="text-xs font-mono text-slate-500 uppercase tracking-wider">Total Harmonics</span>
+          </div>
+          <div>
+            <span class="font-display font-bold text-2xl md:text-3xl text-white block">48kHz</span>
+            <span class="text-xs font-mono text-slate-500 uppercase tracking-wider">Acoustic Sampling</span>
+          </div>
+        </div>
+      </div>
+      <div class="lg:col-span-6 relative flex items-center justify-center">
+        <div class="relative w-full aspect-square max-w-md flex items-center justify-center">
+          <div class="absolute inset-0 rounded-full border border-sky-400/20 animate-ping opacity-40" style="animation-duration: 3s;"></div>
+          <div class="absolute inset-8 rounded-full border border-sky-400/30 animate-pulse"></div>
+          <div class="absolute inset-16 rounded-full border border-white/10 bg-radial from-sky-500/10 to-transparent"></div>
+          <div class="relative z-10 text-center space-y-3 p-8 rounded-3xl backdrop-blur-xl bg-black/40 border border-white/10 shadow-[0_0_50px_rgba(56,189,248,0.15)]">
+            <div class="w-16 h-16 mx-auto rounded-2xl bg-gradient-to-tr from-sky-400/20 to-white/10 border border-sky-400/30 flex items-center justify-center text-sky-400 text-2xl font-display font-bold">
+              10Hz
+            </div>
+            <h3 class="font-display font-bold text-xl text-white">Spatial Audio Architecture</h3>
+            <p class="text-xs text-slate-400 max-w-xs font-light">Dynamic cranial tracking maps acoustic objects 360-degrees around your cranial geometry.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= FEATURE SECTION 02 — NOISE CONTROL ================= -->
+  <section id="section-noise-control" class="relative w-full py-32 px-6 md:px-16 bg-[#08090d] border-t border-white/5 overflow-hidden">
+    <div class="max-w-7xl mx-auto space-y-12">
+      <div class="text-center max-w-3xl mx-auto space-y-4">
+        <span class="text-xs font-mono tracking-[0.3em] uppercase text-sky-400 block">02 / 04 &bull; ACTIVE NOISE CANCELLATION</span>
+        <h2 class="font-display font-extrabold text-4xl sm:text-6xl md:text-7xl tracking-tight leading-[1.05]">
+          Silence,<br>
+          <span class="title-gradient">When You Want It.</span>
+        </h2>
+        <p class="text-slate-400 font-light text-base md:text-lg leading-relaxed">
+          Advanced anti-noise control samples external sound 48,000 times per second, generating an inverted acoustic phase wave that cancels distractions before they reach your ear canal.
+        </p>
+        <div class="inline-flex p-1.5 rounded-full bg-white/5 border border-white/10 backdrop-blur-md">
+          <button id="anc-mode-anc" class="px-6 py-2 rounded-full text-xs font-mono tracking-wider uppercase transition-all bg-sky-400 text-black font-semibold shadow-[0_0_15px_rgba(56,189,248,0.4)]">
+            Active Noise Cancellation
+          </button>
+          <button id="anc-mode-trans" class="px-6 py-2 rounded-full text-xs font-mono tracking-wider uppercase transition-all text-slate-400 hover:text-white">
+            Transparency Mode
+          </button>
+        </div>
+      </div>
+
+      <!-- Real-Time Interactive Canvas Waveform -->
+      <div class="relative w-full max-w-5xl mx-auto h-64 md:h-80 rounded-3xl bg-black/60 border border-white/10 overflow-hidden shadow-2xl flex flex-col justify-between p-6">
+        <div class="flex items-center justify-between text-[11px] font-mono tracking-widest text-slate-400 uppercase">
+          <span class="flex items-center gap-2"><span class="w-2 h-2 rounded-full bg-amber-400 animate-pulse"></span> Ambient Wave (48kHz)</span>
+          <span class="flex items-center gap-2"><span class="w-2 h-2 rounded-full bg-sky-400"></span> Inverted Anti-Phase</span>
+          <span id="anc-status-label" class="text-sky-400 font-semibold">ANC Active: 99.4% Silence</span>
+        </div>
+        
+        <canvas id="anc-canvas" class="w-full h-full block"></canvas>
+
+        <div class="text-center text-[10px] font-mono tracking-widest text-slate-500 uppercase">
+          Live Phase Inversion Engine &bull; Zero Acoustic Delay
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= FEATURE SECTION 03 — BATTERY ================= -->
+  <section id="section-battery" class="relative w-full py-32 px-6 md:px-16 bg-[#050608] border-t border-white/5 overflow-hidden">
+    <div class="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-16 items-center">
+      <div class="lg:col-span-5 relative flex flex-col items-center justify-center">
+        <div class="relative w-64 h-64 md:w-80 md:h-80 flex items-center justify-center">
+          <svg class="w-full h-full -rotate-90 transform" viewBox="0 0 100 100">
+            <circle cx="50" cy="50" r="42" stroke="rgba(255,255,255,0.08)" stroke-width="6" fill="transparent"/>
+            <circle id="battery-svg-circle" cx="50" cy="50" r="42" stroke="#38bdf8" stroke-width="6" stroke-linecap="round" stroke-dasharray="264" stroke-dashoffset="264" fill="transparent" class="transition-all duration-1000 ease-out shadow-[0_0_20px_#38bdf8]"/>
+          </svg>
+          <div class="absolute inset-0 flex flex-col items-center justify-center text-center">
+            <span id="battery-percent-text" class="font-display font-black text-5xl md:text-6xl text-white">100%</span>
+            <span class="text-[11px] font-mono tracking-[0.25em] text-sky-400 uppercase mt-1">Full Charge</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="lg:col-span-7 space-y-6">
+        <span class="text-xs font-mono tracking-[0.3em] uppercase text-sky-400 block">03 / 04 &bull; ENDURANCE & POWER</span>
+        <h2 class="font-display font-extrabold text-4xl sm:text-6xl md:text-7xl tracking-tight leading-[1.05]">
+          POWER THAT<br>
+          <span class="title-gradient">KEEPS UP.</span>
+        </h2>
+        <div class="flex items-baseline gap-3">
+          <span class="font-display font-black text-6xl sm:text-7xl text-white">36</span>
+          <span class="font-display font-bold text-3xl sm:text-4xl text-sky-400">HOURS</span>
+          <span class="text-slate-400 text-sm md:text-base font-light">of total listening time with the wireless charging case.</span>
+        </div>
+        <p class="text-slate-400 font-light text-base leading-relaxed max-w-xl">
+          High-density lithium-silicon micro-cells provide up to 8 hours of unbroken playback on a single charge with active noise cancellation enabled, plus an additional 28 hours in the charging case.
+        </p>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-4 border-t border-white/10">
+          <div class="p-5 rounded-2xl bg-white/5 border border-white/10 space-y-1">
+            <span class="text-xs font-mono text-sky-400 tracking-wider uppercase block">Fast Charging</span>
+            <div class="font-display font-bold text-lg text-white">5 Mins Charge = 2 Hours Playback</div>
+            <p class="text-xs text-slate-400 font-light">Instant burst charging delivers hours of music before your workout or commute.</p>
+          </div>
+          <div class="p-5 rounded-2xl bg-white/5 border border-white/10 space-y-1">
+            <span class="text-xs font-mono text-sky-400 tracking-wider uppercase block">Qi & USB-C</span>
+            <div class="font-display font-bold text-lg text-white">Universal Wireless Induction</div>
+            <p class="text-xs text-slate-400 font-light">Compatible with MagSafe, Qi wireless charging pads, and braided USB-C.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= FEATURE SECTION 04 — INSTANT CONNECTION ================= -->
+  <section id="section-connection" class="relative w-full py-32 px-6 md:px-16 bg-[#07080b] border-t border-white/5 overflow-hidden">
+    <div class="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-16 items-center">
+      <div class="lg:col-span-6 space-y-6">
+        <span class="text-xs font-mono tracking-[0.3em] uppercase text-sky-400 block">04 / 04 &bull; CONNECTIVITY</span>
+        <h2 class="font-display font-extrabold text-4xl sm:text-6xl md:text-7xl tracking-tight leading-[1.05]">
+          Instantly<br>
+          <span class="title-gradient">Connected.</span>
+        </h2>
+        <p class="text-slate-400 font-light text-base md:text-lg leading-relaxed max-w-xl">
+          Flip open the lid and AEROVA ONE pairs with all your devices in an eye-blink. Powered by the next-generation Bluetooth 5.4 LE Audio protocol with seamless multipoint handoff.
+        </p>
+        <div class="space-y-4 pt-2">
+          <div class="flex items-start gap-4">
+            <div class="w-8 h-8 rounded-full bg-sky-400/20 border border-sky-400/40 flex items-center justify-center text-sky-400 shrink-0 mt-1">✓</div>
+            <div>
+              <h4 class="font-display font-bold text-white text-base">One-Tap Instant Pairing</h4>
+              <p class="text-xs text-slate-400 font-light">Automatic proximity pairing with iOS, Android, macOS, and Windows.</p>
+            </div>
+          </div>
+          <div class="flex items-start gap-4">
+            <div class="w-8 h-8 rounded-full bg-sky-400/20 border border-sky-400/40 flex items-center justify-center text-sky-400 shrink-0 mt-1">✓</div>
+            <div>
+              <h4 class="font-display font-bold text-white text-base">Multipoint Audio Handoff</h4>
+              <p class="text-xs text-slate-400 font-light">Switch effortlessly between your laptop video call and mobile phone without touching settings.</p>
+            </div>
+          </div>
+          <div class="flex items-start gap-4">
+            <div class="w-8 h-8 rounded-full bg-sky-400/20 border border-sky-400/40 flex items-center justify-center text-sky-400 shrink-0 mt-1">✓</div>
+            <div>
+              <h4 class="font-display font-bold text-white text-base">Sub-40ms Ultra-Low Latency</h4>
+              <p class="text-xs text-slate-400 font-light">Zero audio lag for competitive gaming and high-fidelity video sync.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="lg:col-span-6 relative flex items-center justify-center">
+        <div class="relative w-full max-w-md p-8 rounded-3xl bg-black/50 border border-white/10 backdrop-blur-xl shadow-2xl space-y-6">
+          <div class="flex items-center justify-between pb-4 border-b border-white/10">
+            <div class="flex items-center gap-3">
+              <span class="w-3 h-3 rounded-full bg-emerald-400 animate-ping"></span>
+              <span class="text-xs font-mono text-white tracking-widest uppercase">Bluetooth 5.4 LE</span>
+            </div>
+            <span class="text-[11px] font-mono text-sky-400">Connected</span>
+          </div>
+          <div class="flex items-center justify-between py-4">
+            <div class="text-center">
+              <div class="w-16 h-16 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center mx-auto mb-2 text-2xl">🎧</div>
+              <div class="text-xs font-bold text-white">AEROVA ONE</div>
+              <div class="text-[10px] text-emerald-400 font-mono">100% Battery</div>
+            </div>
+            <div class="flex-1 flex flex-col items-center px-4">
+              <div class="w-full h-0.5 bg-gradient-to-r from-sky-400 via-white to-sky-400 relative overflow-hidden">
+                <div class="absolute inset-0 bg-white shadow-[0_0_10px_#ffffff] animate-pulse"></div>
+              </div>
+              <span class="text-[9px] font-mono text-slate-400 uppercase mt-2 tracking-widest">&lt; 38ms Latency</span>
+            </div>
+            <div class="text-center">
+              <div class="w-16 h-16 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center mx-auto mb-2 text-2xl">📱</div>
+              <div class="text-xs font-bold text-white">Personal Device</div>
+              <div class="text-[10px] text-slate-400 font-mono">LDAC Active</div>
+            </div>
+          </div>
+          <div class="p-3 rounded-xl bg-sky-400/10 border border-sky-400/20 text-center">
+            <span class="text-xs font-mono text-sky-300">"Connected. Spatial Audio enabled."</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= 360° INTERACTIVE PRODUCT VIEWER ================= -->
+  <section id="section-360" class="relative w-full py-32 px-6 md:px-16 bg-[#050507] border-t border-white/5 overflow-hidden">
+    <div class="max-w-7xl mx-auto space-y-8">
+      <div class="text-center max-w-2xl mx-auto space-y-3">
+        <span class="text-xs font-mono tracking-[0.3em] uppercase text-sky-400 block">360&deg; INSPECTOR</span>
+        <h2 class="font-display font-extrabold text-4xl sm:text-6xl md:text-7xl tracking-tight leading-[1.05]">
+          EXPLORE<br>
+          <span class="title-gradient">EVERY ANGLE.</span>
+        </h2>
+        <p class="text-slate-400 font-light text-sm md:text-base leading-relaxed">
+          Click and drag in any direction to rotate the 3D model. Inspect acoustic nozzles, micro-machined grilles, and ergonomic curvature.
+        </p>
+      </div>
+
+      <!-- 3D Viewer Container with Controls -->
+      <div class="relative w-full max-w-5xl mx-auto h-[480px] md:h-[540px] rounded-3xl bg-[#08090d] border border-white/10 overflow-hidden shadow-2xl cursor-grab active:cursor-grabbing">
+        <div id="viewer-360-container" class="absolute inset-0 w-full h-full"></div>
+
+        <!-- Angle Preset Controls Floating Overlay -->
+        <div class="absolute bottom-6 inset-x-6 z-20 flex flex-wrap items-center justify-center gap-3 pointer-events-auto">
+          <button data-angle="front" class="btn-360-angle px-5 py-2 rounded-full text-xs font-mono tracking-wider uppercase bg-white text-black font-semibold border border-white/20 transition-all">
+            Front View
+          </button>
+          <button data-angle="beauty" class="btn-360-angle px-5 py-2 rounded-full text-xs font-mono tracking-wider uppercase bg-white/10 hover:bg-white text-white hover:text-black border border-white/15 transition-all">
+            45&deg; Hero
+          </button>
+          <button data-angle="driver" class="btn-360-angle px-5 py-2 rounded-full text-xs font-mono tracking-wider uppercase bg-white/10 hover:bg-white text-white hover:text-black border border-white/15 transition-all">
+            Acoustic Nozzle
+          </button>
+          <button data-angle="stem" class="btn-360-angle px-5 py-2 rounded-full text-xs font-mono tracking-wider uppercase bg-white/10 hover:bg-white text-white hover:text-black border border-white/15 transition-all">
+            Capacitive Stem
+          </button>
+          <button id="btn-360-autorotate" class="px-5 py-2 rounded-full text-xs font-mono tracking-wider uppercase bg-sky-400/20 text-sky-400 border border-sky-400/40 hover:bg-sky-400 hover:text-black transition-all">
+            ⟳ Auto-Rotate: ON
+          </button>
+        </div>
+
+        <div class="absolute top-6 left-6 z-20 pointer-events-none">
+          <span class="text-[10px] font-mono tracking-[0.25em] text-slate-500 uppercase flex items-center gap-2">
+            <span class="w-2 h-2 rounded-full bg-sky-400 animate-pulse"></span> Drag to Orbit &bull; 360 Interactive
+          </span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= TECHNICAL SPECIFICATIONS ================= -->
+  <section id="section-specs" class="relative w-full py-32 px-6 md:px-16 bg-[#070709] border-t border-white/5">
+    <div class="max-w-6xl mx-auto space-y-16">
+      <div class="text-center max-w-2xl mx-auto space-y-3">
+        <span class="text-xs font-mono tracking-[0.3em] uppercase text-sky-400 block">SPECIFICATIONS</span>
+        <h2 class="font-display font-extrabold text-4xl sm:text-6xl tracking-tight">
+          AEROVA ONE<br>
+          <span class="title-gradient">Technical Architecture.</span>
+        </h2>
+        <p class="text-slate-400 font-light text-sm md:text-base">Meticulously calibrated acoustic tolerances down to the sub-micron.</p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-x-16 gap-y-12 border-t border-white/10 pt-12">
+        <div class="space-y-4">
+          <h3 class="font-display font-bold text-xl text-white flex items-center gap-3">
+            <span class="w-1.5 h-4 bg-sky-400 rounded-full"></span> Audio Technology
+          </h3>
+          <ul class="space-y-3 text-sm text-slate-300 font-light">
+            <li class="flex justify-between pb-2 border-b border-white/5"><span class="text-slate-400">Driver Unit</span> <span>11mm Beryllium Composite Diaphragm</span></li>
+            <li class="flex justify-between pb-2 border-b border-white/5"><span class="text-slate-400">Frequency Response</span> <span>10Hz &ndash; 45,000Hz (Hi-Res Audio)</span></li>
+            <li class="flex justify-between pb-2 border-b border-white/5"><span class="text-slate-400">Spatial Audio</span> <span>Dynamic Cranial Gyroscopic Head Tracking</span></li>
+            <li class="flex justify-between pb-2 border-b border-white/5"><span class="text-slate-400">Active Equalizer</span> <span>Real-time Continuous Adaptive EQ</span></li>
+          </ul>
+        </div>
+
+        <div class="space-y-4">
+          <h3 class="font-display font-bold text-xl text-white flex items-center gap-3">
+            <span class="w-1.5 h-4 bg-sky-400 rounded-full"></span> Noise Control & Mics
+          </h3>
+          <ul class="space-y-3 text-sm text-slate-300 font-light">
+            <li class="flex justify-between pb-2 border-b border-white/5"><span class="text-slate-400">Noise Cancellation</span> <span>Hybrid Pro-Grade Active ANC (-42dB)</span></li>
+            <li class="flex justify-between pb-2 border-b border-white/5"><span class="text-slate-400">Sampling Rate</span> <span>48,000 times / second</span></li>
+            <li class="flex justify-between pb-2 border-b border-white/5"><span class="text-slate-400">Microphones</span> <span>Triple Beamforming Array + Acoustic Mesh</span></li>
+            <li class="flex justify-between pb-2 border-b border-white/5"><span class="text-slate-400">Wind Protection</span> <span>Inward Vent Pressure Equalization</span></li>
+          </ul>
+        </div>
+
+        <div class="space-y-4">
+          <h3 class="font-display font-bold text-xl text-white flex items-center gap-3">
+            <span class="w-1.5 h-4 bg-sky-400 rounded-full"></span> Battery & Charging
+          </h3>
+          <ul class="space-y-3 text-sm text-slate-300 font-light">
+            <li class="flex justify-between pb-2 border-b border-white/5"><span class="text-slate-400">Earbud Playback</span> <span>Up to 8 hours (6 hours with ANC)</span></li>
+            <li class="flex justify-between pb-2 border-b border-white/5"><span class="text-slate-400">Total with Case</span> <span>Up to 36 hours continuous</span></li>
+            <li class="flex justify-between pb-2 border-b border-white/5"><span class="text-slate-400">Fast Fuel</span> <span>5 minutes in case provides 2 hours</span></li>
+            <li class="flex justify-between pb-2 border-b border-white/5"><span class="text-slate-400">Charging Methods</span> <span>Qi Wireless, MagSafe, USB-C</span></li>
+          </ul>
+        </div>
+
+        <div class="space-y-4">
+          <h3 class="font-display font-bold text-xl text-white flex items-center gap-3">
+            <span class="w-1.5 h-4 bg-sky-400 rounded-full"></span> Connectivity & Durability
+          </h3>
+          <ul class="space-y-3 text-sm text-slate-300 font-light">
+            <li class="flex justify-between pb-2 border-b border-white/5"><span class="text-slate-400">Wireless Standard</span> <span>Bluetooth 5.4 LE Audio</span></li>
+            <li class="flex justify-between pb-2 border-b border-white/5"><span class="text-slate-400">Audio Codecs</span> <span>LDAC, LC3, AAC, SBC</span></li>
+            <li class="flex justify-between pb-2 border-b border-white/5"><span class="text-slate-400">Water Resistance</span> <span>IPX4 Sweat & Weatherproof</span></li>
+            <li class="flex justify-between pb-2 border-b border-white/5"><span class="text-slate-400">Weight</span> <span>4.8g per earbud &bull; 42g case</span></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= FINAL CINEMATIC SECTION (CLIMAX BUY CTA) ================= -->
+  <section id="section-buy" class="relative w-full py-36 px-6 md:px-16 bg-[#040406] border-t border-white/5 overflow-hidden text-center">
+    <div class="max-w-4xl mx-auto space-y-8 relative z-10">
+      <span class="text-xs font-mono tracking-[0.35em] uppercase text-sky-400 block">THE ALL-NEW FLAGSHIP</span>
+      <h2 class="font-display font-extrabold text-5xl sm:text-7xl md:text-8xl tracking-tight leading-[1.0]">
+        HEAR THE<br>
+        <span class="title-gradient">DIFFERENCE.</span>
+      </h2>
+      <p class="max-w-xl mx-auto text-slate-400 font-light text-base md:text-lg">
+        Step into high-resolution acoustic clarity. Free worldwide express shipping, 30-day in-home trial, and 2-year warranty included.
+      </p>
+
+      <div class="pt-4 flex flex-col items-center gap-4">
+        <div class="flex items-baseline gap-2">
+          <span class="text-4xl sm:text-5xl font-display font-black text-white">&#8377;12,999</span>
+          <span class="text-slate-500 font-mono text-sm line-through">&#8377;16,999</span>
+          <span class="text-xs font-mono text-emerald-400 uppercase tracking-widest px-2 py-0.5 rounded-full bg-emerald-400/10 border border-emerald-400/20">Launch Offer</span>
+        </div>
+
+        <div class="flex flex-col sm:flex-row items-center gap-4 pt-4 w-full sm:w-auto">
+          <button id="final-buy-btn" class="px-10 py-4 rounded-full bg-white text-black font-semibold text-xs tracking-[0.25em] uppercase hover:bg-sky-300 hover:shadow-[0_0_35px_rgba(56,189,248,0.5)] transition-all transform hover:-translate-y-0.5 w-full sm:w-auto cta-primary">
+            Buy AEROVA ONE &bull; &#8377;12,999
+          </button>
+          <a href="#section-specs" class="px-10 py-4 rounded-full border border-white/20 text-xs tracking-[0.25em] uppercase hover:bg-white/10 transition-all transform hover:-translate-y-0.5 w-full sm:w-auto cta-secondary text-white">
+            Explore Details
+          </a>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-6 pt-12 border-t border-white/10 max-w-2xl mx-auto text-xs font-mono text-slate-400 uppercase tracking-widest">
+        <div>📦 Free Express Delivery</div>
+        <div>🛡️ 2-Year Full Warranty</div>
+        <div>🔄 30-Day Risk-Free Trial</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= SLIDE-OVER BAG DRAWER ================= -->
+  <div id="bag-backdrop" class="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 opacity-0 pointer-events-none transition-opacity duration-300"></div>
+  <aside id="bag-drawer" class="fixed top-0 right-0 bottom-0 w-full max-w-md bg-[#0a0c10] border-l border-white/10 z-50 transform translate-x-full transition-transform duration-400 ease-out flex flex-col justify-between p-6 md:p-8">
+    <div class="space-y-6">
+      <div class="flex items-center justify-between pb-4 border-b border-white/10">
+        <h3 class="font-display font-bold text-xl text-white">Review Bag (1)</h3>
+        <button id="close-bag-btn" class="p-2 text-slate-400 hover:text-white transition-colors" title="Close">✕</button>
+      </div>
+
+      <div class="p-4 rounded-2xl bg-white/5 border border-white/10 flex gap-4">
+        <div class="w-20 h-20 rounded-xl bg-black/60 border border-white/10 flex items-center justify-center text-3xl shrink-0">🎧</div>
+        <div class="space-y-1 flex-1">
+          <h4 class="font-display font-bold text-white text-base">AEROVA ONE</h4>
+          <p class="text-xs text-slate-400 font-light">Space White &bull; Wireless Charging Case</p>
+          <div class="flex items-center justify-between pt-2">
+            <span class="font-mono font-bold text-white text-sm">&#8377;12,999</span>
+            <span class="text-[10px] font-mono text-sky-400 uppercase">In Stock</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="space-y-2 text-xs text-slate-400 font-light">
+        <div class="flex justify-between"><span>Includes</span> <span>4 Pair Ear Tips (XS/S/M/L)</span></div>
+        <div class="flex justify-between"><span>Cable</span> <span>Braided USB-C Cable (1m)</span></div>
+        <div class="flex justify-between"><span>Shipping</span> <span class="text-emerald-400">FREE Express (2-3 Days)</span></div>
+      </div>
+    </div>
+
+    <div class="space-y-4 pt-6 border-t border-white/10">
+      <div class="flex justify-between text-base font-bold text-white">
+        <span>Total Due</span>
+        <span>&#8377;12,999</span>
+      </div>
+      <button id="checkout-btn" class="w-full py-4 rounded-full bg-sky-400 text-black font-semibold text-xs tracking-[0.2em] uppercase hover:bg-sky-300 hover:shadow-[0_0_25px_rgba(56,189,248,0.5)] transition-all">
+        Proceed to Checkout
+      </button>
+      <p class="text-[10px] text-center text-slate-500 font-mono uppercase tracking-widest">
+        🔒 256-Bit Encrypted Secure Checkout
+      </p>
+    </div>
+  </aside>
+
+  <!-- ================= LUXURY MINIMALIST FOOTER ================= -->
+  <footer class="w-full py-16 px-6 md:px-14 bg-black border-t border-white/10 text-slate-500 text-xs font-mono">
+    <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-8">
+      <div class="flex items-center gap-3">
+        <span class="font-display font-bold text-white tracking-[0.25em] text-lg">AEROVA</span>
+        <span class="text-slate-600">&bull;</span>
+        <span>A New Dimension of Sound.</span>
+      </div>
+      <div class="flex items-center gap-8 uppercase tracking-widest text-[11px]">
+        <a href="#pin-wrapper" class="hover:text-white transition-colors">Overview</a>
+        <a href="#section-audio" class="hover:text-white transition-colors">Audio</a>
+        <a href="#section-noise-control" class="hover:text-white transition-colors">Noise Control</a>
+        <a href="#section-battery" class="hover:text-white transition-colors">Battery</a>
+        <a href="#section-360" class="hover:text-white transition-colors">360&deg; View</a>
+        <a href="#section-specs" class="hover:text-white transition-colors">Specs</a>
+      </div>
+      <div class="text-[10px] text-slate-600">
+        &copy; 2026 AEROVA Inc. All rights reserved.
+      </div>
+    </div>
+  </footer>
+
+  <!-- Minimalist Toast Container -->
+  <div id="toast"></div>
+
+  <!-- Master Cinematic Script -->
+  <script src="app.js"></script>
+</body>
+</html>
