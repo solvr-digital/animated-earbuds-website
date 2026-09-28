@@ -4,6 +4,8 @@ A premium, immersive earbuds website designed with cinematic product animations,
 
 The website focuses on creating a modern product experience where the earbuds come alive through scroll-based animations.
 
+#LIVE LINK - https://animated-earbuds-website.vercel.app/
+
 ## ✨ Features
 
 - 🎧 Premium earbuds product showcase
